@@ -41,7 +41,6 @@
 //     ul.appendChild(li);
 
 //     lcStorage(inputValue.value);
-
 //     inputValue.value = "";
 
 // }
@@ -160,9 +159,10 @@ ul = document.querySelector(".collection");
 clearBtn = document.querySelector("#btn-clear");
 
 
-  task.addEventListener("submit", addTask);
-  document.addEventListener("DOMContentLoaded", getTask);
-  clearBtn.addEventListener("click", remove);
+task.addEventListener("submit", addTask);
+document.addEventListener("DOMContentLoaded", getTask);
+clearBtn.addEventListener("click", remove);
+ul.addEventListener("click", removeTask);
 
 function addTask(e) {
   e.preventDefault();
@@ -174,6 +174,7 @@ function addTask(e) {
   const li = document.createElement("li");
   li.className = "collection-item";
   li.innerText = `${text.value}`;
+    
 
   const a = document.createElement("a");
   a.className = "delete-item secondary-content";
@@ -227,6 +228,39 @@ function getTask() {
   }
 }
 
+function removeTask(e) {
+  e.target.parentElement;
+
+  if (e.target.parentElement.classList.contains("delete-item")) {
+    if (confirm("Are you sure")) {
+      e.target.parentElement.parentElement.remove();
+      removeFromLs(e.target.parentElement.parentElement);
+    }
+  }
+}
+
+function removeFromLs(removeLs) {
+  let values;
+  if (localStorage.getItem("values") === null) {
+    values = [];
+  } else {
+    values = JSON.parse(localStorage.getItem("values"));
+  }
+
+  values.forEach(function (task, index) {
+    console.log(task);
+    if (removeLs.textContent === task) {
+      values.splice(index, 1);
+    }
+  });
+
+  localStorage.setItem("values", JSON.stringify(values));
+
+  if(values.length === 0)
+  {
+      window.location.reload();
+  }
+}
 function remove() {
   // ul.remove();
   localStorage.clear();
